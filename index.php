@@ -37,13 +37,13 @@ $eventsDetails = array(
         'title' => 'Event DD'
     ),
     'Event7' => array(
-        'date' => '2023-10-21',
-        'time' => '4:30 PM',
-        'location' => 'City I',
-        'title' => 'Event E'
+        'date' => '2023-10-29',
+        'time' => '3:30 PM',
+        'location' => 'City K',
+        'title' => 'Event K'
     ),
     'Event8' => array(
-        'date' => '2022-1-22',
+        'date' => '2022-01-22',
         'time' => '5:30 PM',
         'location' => 'City I',
         'title' => 'Event E'
@@ -71,22 +71,67 @@ $eventsDetails = array(
         'time' => '11:30 AM',
         'location' => 'City I',
         'title' => 'Event E'
-    )
+    ),
+    'Event13' => array(
+        'date' => '2009-10-11',
+        'time' => '12:30 AM',
+        'location' => 'City I',
+        'title' => 'Event E'
+    ),
+    'Event14' => array(
+        'date' => '2023-10-20',
+        'time' => '4:30 PM',
+        'location' => 'City G',
+        'title' => 'Event G'
+    ),
+    'Event15' => array(
+        'date' => '',
+        'time' => '4:30 PM',
+        'location' => 'City G',
+        'title' => 'Event G'
+    ),
 );
 
-$index = 1;
-function compareEvents($event1, $event2) {
-    $dateTime1 = strtotime($event1['date'] . ' ' . $event1['time']);
-    $dateTime2 = strtotime($event2['date'] . ' ' . $event2['time']);
+// $index = 1;
+// function compareEvents($event1, $event2) {
+//     $dateTime1 = strtotime($event1['date'] . ' ' . $event1['time']);
+//     $dateTime2 = strtotime($event2['date'] . ' ' . $event2['time']);
 
-    return $dateTime1 - $dateTime2;
-}
+//     return $dateTime1 - $dateTime2;
+// }
 
-usort($eventsDetails, 'compareEvents');
+// usort($eventsDetails, 'compareEvents');
 
-echo "Sorted Events:<br>";
+// echo "Sorted Events:<br>";
+// foreach ($eventsDetails as $event) {
+//     echo $index++ . " Date: " . $event['date'] . ", Time: " . $event['time'] . ", Location: " . $event['location'] . ", Title: " . $event['title'] . "<br>";
+// }
+
+$eventsByYearMonth = array();
 foreach ($eventsDetails as $event) {
-    echo $index++ . " Date: " . $event['date'] . ", Time: " . $event['time'] . ", Location: " . $event['location'] . ", Title: " . $event['title'] . "<br>";
+    if (isset($event['date']) && !empty($event['date'])) {
+        $year = substr($event['date'], 0, 4);
+        $month = substr($event['date'], 5, 2);
+        // $month = date('F', strtotime($event['date']));
+        $eventsByYearMonth[$year][$month][] = $event;
+    }
 }
 
+ksort($eventsByYearMonth);
+foreach ($eventsByYearMonth as &$eventsInYear) {
+    ksort($eventsInYear);
+    foreach ($eventsInYear as &$eventsInMonth) {
+        usort($eventsInMonth, 'compareEventsByDates');
+    }
+}
+
+// callback function for comparison of events by date 
+function compareEventsByDates($a, $b) {
+    $dateA = strtotime($a['date']);
+    $dateB = strtotime($b['date']);
+    return $dateA - $dateB;
+}
+
+echo "<pre>";
+print_r($eventsByYearMonth);
 ?>
