@@ -90,6 +90,30 @@ $eventsDetails = array(
         'location' => 'City G',
         'title' => 'Event G'
     ),
+    'Event16' => array(
+        'date' => '2009-09-11',
+        'time' => '3:30 PM',
+        'location' => 'City I',
+        'title' => 'Event E'
+    ),
+    'Event17' => array(
+        'date' => '2009-09-11',
+        'time' => '8:30 AM',
+        'location' => 'City I',
+        'title' => 'Event E'
+    ),
+    'Event18' => array(
+        'date' => '2009-09-11',
+        'time' => '12:30 PM',
+        'location' => 'City I',
+        'title' => 'Event E'
+    ),
+    'Event19' => array(
+        'date' => '2022-06-22',
+        'time' => '01:30 PM',
+        'location' => 'City I',
+        'title' => 'Event E'
+    ),
 );
 
 // $index = 1;
@@ -121,6 +145,7 @@ ksort($eventsByYearMonth);
 foreach ($eventsByYearMonth as &$eventsInYear) {
     ksort($eventsInYear);
     foreach ($eventsInYear as &$eventsInMonth) {
+        usort($eventsInMonth, 'compareEventsByTime');
         usort($eventsInMonth, 'compareEventsByDates');
     }
 }
@@ -130,6 +155,12 @@ function compareEventsByDates($a, $b) {
     $dateA = strtotime($a['date']);
     $dateB = strtotime($b['date']);
     return $dateA - $dateB;
+}
+
+function compareEventsByTime($a, $b) {
+    $timeA = strtotime($a['time']);
+    $timeB = strtotime($b['time']);
+    return $timeA - $timeB;
 }
 
 echo "<pre>";
